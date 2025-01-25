@@ -37,7 +37,8 @@ enum flipvalo_trigger_variants {
     FvTrigSony = 0,
     FvTrigCanon = 1,
     FvTrigNikon = 2,
-    FvTrigMax = 2,
+    FvTrigPentax = 3,
+    FvTrigMax = 3,
 };
 
 // run config for intervalometer
@@ -164,6 +165,16 @@ static int nikon_ir_trigger_send(void* ctx) {
     return 0;
 }
 
+uint32_t pentax_ir_timings[] = {
+    13044, 3057, 965, 1023, 967, 1022, 968, 1023, 
+    990, 1053, 966, 1023, 967, 1024, 989
+};
+static int pentax_ir_trigger_send(void* ctx) {
+    UNUSED(ctx);
+    infrared_send_raw_ext(pentax_ir_timings, 15, true, 38000, 0.33);
+    return 0;
+}
+
 struct flipvalo_trigger sony_ir_trigger = {
     .send = sony_ir_trigger_send,
     .display_name = "Sony IR"
@@ -179,6 +190,11 @@ struct flipvalo_trigger nikon_ir_trigger = {
     .display_name = "Nikon IR"
 };
 
+struct flipvalo_trigger pentax_ir_trigger = {
+    .send = pentax_ir_trigger_send,
+    .display_name = "Pentax IR"
+};
+
 static struct flipvalo_trigger* flipvalo_get_trigger(
         enum flipvalo_trigger_variants variant
 ) {
@@ -189,6 +205,8 @@ static struct flipvalo_trigger* flipvalo_get_trigger(
             return &canon_ir_trigger;
         case FvTrigNikon:
             return &nikon_ir_trigger;
+	case FvTrigPentax:
+            return &pentax_ir_trigger; 
     }
     return NULL;
 }
