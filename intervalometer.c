@@ -205,7 +205,7 @@ static struct flipvalo_trigger* flipvalo_get_trigger(
             return &canon_ir_trigger;
         case FvTrigNikon:
             return &nikon_ir_trigger;
-	case FvTrigPentax:
+        case FvTrigPentax:
             return &pentax_ir_trigger; 
     }
     return NULL;
